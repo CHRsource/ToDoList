@@ -1,0 +1,128 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8;
+    min-width: max-content;
+}
+
+.site-header {
+    background-color: #296fd9;
+    color: white;
+    text-align: left;
+    padding: 1px 20px;
+    font-size: 15px;
+    width: 100% - 20px;
+}
+
+.site-main {
+    padding: 20px;
+}
+
+.new-task_section {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+    margin-bottom: 30px;
+    width: 350px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.task-input-container {
+    display: flex;
+    gap: 10px;
+}
+
+.task-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background-color: #0056b3;
+}
+
+.task-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+.task-section {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.task-section h3 {
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+    margin: 0;
+}
+
+.backlog h3 { background-color: #d5d5d5; color: #6c6c6c}
+.in-progress h3 { background-color: #bad5fb; color: #2180e6; }
+.done h3 { background-color: #beffc3; color: #38b642; }
+.trash h3 { background-color: #fbc0c0; color: #d9534f; }
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-list li {
+    background: white;
+    padding: 8px 8px 8px 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.task-list li::before {
+    content: "";
+    width: 5px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 5px 0 0 5px;
+}
+
+.backlog .task-list li::before { background-color: #d5d5d5; }
+.in-progress .task-list li::before { background-color: #bad5fb; }
+.done .task-list li::before { background-color: #beffc3; }
+.trash .task-list li::before { background-color: #fbc0c0; }
+
+.clear-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.clear-btn:hover {
+    background-color: #c9302c;
+}
