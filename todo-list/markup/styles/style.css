@@ -12,13 +12,14 @@ body {
     text-align: left;
     padding: 1px 20px;
     font-size: 15px;
+    width: 100% - 20px;
 }
 
 .site-main {
     padding: 20px;
 }
 
-.new-task-section {
+.new-task_section {
     background: white;
     padding: 15px;
     border-radius: 10px;

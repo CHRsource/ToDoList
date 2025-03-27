@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <title>Список задач</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<header class="site-header">
+  <h1 class="site-header_title">Список задач</h1>
+</header>
+
+<main class="site-main">
+  <section class="new-task_section">
+    <form class="new-task_form">
+      <h2>Новая задача</h2>
+      <section class="task-input-container">
+        <input type="text" class="task-input" placeholder="Название задачи...">
+        <button type="button" class="add-btn">+ Добавить</button>
+      </section>
+    </form>
+  </section>
+
+  <section class="task-container">
+    <section class="task-section backlog">
+      <h3>Бэклог</h3>
+      <ul class="task-list">
+        <li class="task-list_item">Выучить JS</li>
+        <li class="task-list_item">Выучить React</li>
+        <li class="task-list_item">Сделать домашку</li>
+      </ul>
+    </section>
+
+    <section class="task-section in-progress">
+      <h3>В процессе</h3>
+      <ul class="task-list">
+        <li class="task-list_item">Выпить смузи</li>
+        <li class="task-list_item">Попить воды</li>
+      </ul>
+    </section>
+
+    <section class="task-section done">
+      <h3>Готово</h3>
+      <ul class="task-list">
+        <li class="task-list_item">Позвонить маме</li>
+        <li class="task-list_item">Погладить кота</li>
+      </ul>
+    </section>
+
+    <section class="task-section trash">
+      <h3>Корзина</h3>
+      <ul class="task-list">
+        <li class="task-list_item">Сходить погулять</li>
+        <li class="task-list_item">Прочитать Войну и Мир</li>
+      </ul>
+      <button class="clear-btn">X Очистить</button>
+    </section>
+  </section>
+</main>
+
+</html>
