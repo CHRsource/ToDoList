@@ -1,3 +1,5 @@
+import { AbstractComponent } from "./view/abstract-component.js";
+
 const RenderPosition = {
     BEFOREBEGIN: 'beforebegin',
     AFTERBEGIN: 'afterbegin',
@@ -12,9 +14,16 @@ function createElement(template) {
     return newElement.firstElementChild;
 }
 
-function render(component, container, place = 
-RenderPosition.BEFOREEND) {
-    container.insertAdjacentElement(place, component.getElement());
+function render(component, container, place = RenderPosition.BEFOREEND) {
+    if (!(component instanceof AbstractComponent)) {
+        throw new Error('Can render only components');
+    }
+    
+    if (container === null) {
+        throw new Error('Container element doesn\'t exist');
+    }
+    
+    container.insertAdjacentElement(place, component.element);
 }
 
 export {RenderPosition, createElement, render};
