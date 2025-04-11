@@ -29,11 +29,7 @@ export default class TasksBoardPresenter {
         render(this.#tasksBoardComponent, this.#boardContainer);
 
         Object.values(Status).forEach((status) => {
-            if (status === Status.BASKET) {
-                this.#renderBasketTasksList(this.#boardTasks);
-            } else {
-                this.#renderTasksList(status, this.#boardTasks);
-            }
+            this.#renderTasksList(status, this.#boardTasks);
         });
     }
 
@@ -58,14 +54,10 @@ export default class TasksBoardPresenter {
             });
         }
 
-        return taskListComponent; 
-    }
-
-    #renderBasketTasksList(tasks) {
-        const taskListComponent = this.#renderTasksList(Status.BASKET, tasks)
-    
-        const clearButtonComponent = new ClearButtonComponent();
-        render(clearButtonComponent, taskListComponent.element);
+        if (status === Status.BASKET) {
+            const clearButtonComponent = new ClearButtonComponent();
+            render(clearButtonComponent, taskListComponent.element);
+        }
     }
     
 
