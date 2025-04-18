@@ -9,8 +9,12 @@ const bodyContainer = document.querySelector('.board-app');
 const formContainer = document.querySelector('.new-task-section');
 const taskBoardContainer = document.querySelector('.site-main')
 
+const formAddTaskComponent = new FormAddTaskComponent({
+    onClick: handleNewTaskButtonClick
+});
+
 render(new HeaderComponent(), bodyContainer, RenderPosition.AFTERBEGIN);
-render(new FormAddTaskComponent(), formContainer);
+render(formAddTaskComponent, formContainer);
 
 const tasksModel = new TasksModel();
 const tasksBoardPresenter = new TasksBoardPresenter({
@@ -20,3 +24,9 @@ const tasksBoardPresenter = new TasksBoardPresenter({
 
 
 tasksBoardPresenter.init();
+
+
+
+function handleNewTaskButtonClick() {
+    tasksBoardPresenter.createTask();
+}

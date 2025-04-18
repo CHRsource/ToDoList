@@ -12,16 +12,14 @@ export default class TasksBoardPresenter {
 
     #tasksBoardComponent = new TaskBoardComponent();
 
-    #boardTasks = [];
-
     constructor({boardContainer, tasksModel}) {
         this.#boardContainer = boardContainer;
         this.#tasksModel = tasksModel;
+
+        this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
     }
 
-    init() {
-        this.#boardTasks = [...this.#tasksModel.tasks];
-        
+    init() {      
         this.#renderBoard();
     }
 
@@ -29,8 +27,12 @@ export default class TasksBoardPresenter {
         render(this.#tasksBoardComponent, this.#boardContainer);
 
         Object.values(Status).forEach((status) => {
-            this.#renderTasksList(status, this.#boardTasks);
+            this.#renderTasksList(status, this.tasks);
         });
+    }
+
+    #clearBoard() {
+        this.#tasksBoardComponent.element.innerHTML = '';
     }
 
     #renderTask(task, container) {
@@ -55,7 +57,11 @@ export default class TasksBoardPresenter {
         }
 
         if (status === Status.BASKET) {
-            const clearButtonComponent = new ClearButtonComponent();
+            const hasTasks = tasksByStatus.length > 0;
+            const clearButtonComponent = new ClearButtonComponent({
+                onClick: this.#handleClearBasket.bind(this),
+                disabled: !hasTasks
+            });
             render(clearButtonComponent, taskListComponent.element);
         }
     }
@@ -64,5 +70,29 @@ export default class TasksBoardPresenter {
     #renderNoTask(container) {
         const noTaskComponent = new NoTaskComponent();
         render(noTaskComponent, container);
+    }
+
+    createTask() {
+        const taskTitle = document.querySelector('.task-input').value.trim();
+        if (!taskTitle) {
+            return;
+        }
+
+        this.#tasksModel.addTask(taskTitle);
+
+        document.querySelector('.task-input').value = '';
+    }
+
+    get tasks() {
+        return this.#tasksModel.tasks;
+    }
+
+    #handleModelChange() {
+        this.#clearBoard();
+        this.#renderBoard();
+    }
+
+    #handleClearBasket() {
+        this.#tasksModel.clearBasket();
     }
 }
