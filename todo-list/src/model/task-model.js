@@ -30,6 +30,38 @@ export default class TasksModel {
         this._notifyObservers();
     }
 
+    updateTaskStatus(taskId, newStatus) {
+        const task = this.#boardtasks.find(task => task.id === taskId);
+        if (task) {
+            task.status = newStatus;
+            this._notifyObservers();
+        }
+    }
+
+    moveTask(taskId, newStatus, targetIndex) {
+        const taskIndex = this.#boardtasks.findIndex(task => task.id === taskId);
+        if (taskIndex === -1) return;
+    
+        const [movedTask] = this.#boardtasks.splice(taskIndex, 1);
+        movedTask.status = newStatus;
+    
+        let currentIndex = 0;
+        for (let i = 0; i < this.#boardtasks.length; i++) {
+            if (this.#boardtasks[i].status === newStatus) {
+                if (currentIndex === targetIndex) {
+                    this.#boardtasks.splice(i, 0, movedTask);
+                    this._notifyObservers();
+                    return;
+                }
+                currentIndex++;
+            }
+        }
+    
+        this.#boardtasks.push(movedTask);
+        this._notifyObservers();
+    }
+    
+
     addObserver(observer) {
         this.#observers.push(observer);
     }
