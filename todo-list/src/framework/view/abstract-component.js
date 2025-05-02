@@ -21,6 +21,7 @@ export class AbstractComponent {
     }
 
     removeElement() {
+        this.#element.remove();
         this.#element = null;
     }
 

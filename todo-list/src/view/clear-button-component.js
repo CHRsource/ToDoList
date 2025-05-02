@@ -20,6 +20,10 @@ export default class ClearButtonComponent extends AbstractComponent {
         return createClearButtonTemplate(this.#disabled);
     }
 
+    toggleDisabled(value) {
+        this.#disabled = value;
+    }
+
     #clickHandler = () => {
         if (!this.#disabled) {
             this.#handleClick();

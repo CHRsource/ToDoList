@@ -3,23 +3,31 @@ import TaskComponent from "../view/task-component.js";
 import TaskBoardComponent from "../view/task-board-component.js";
 import NoTaskComponent from "../view/no-task-component.js";
 import ClearButtonComponent from "../view/clear-button-component.js";
+import LoadingViewComponent from "../view/loading-view-component.js";
 import {render} from '../framework/render.js';
-import {Status, StatusLabel} from '../const.js';
+import {Status, StatusLabel, UserAction} from '../const.js';
 
 export default class TasksBoardPresenter {
     #boardContainer = null;
     #tasksModel = null;
 
     #tasksBoardComponent = new TaskBoardComponent();
+    #resetButtonComponent = null;
+    #loadingComponent = new LoadingViewComponent();
 
     constructor({boardContainer, tasksModel}) {
         this.#boardContainer = boardContainer;
         this.#tasksModel = tasksModel;
 
-        this.#tasksModel.addObserver(this.#handleModelChange.bind(this));
+        this.#tasksModel.addObserver(this.#handleModelEvent.bind(this));
     }
 
-    init() {      
+    async init() { 
+        render(this.#loadingComponent, this.#boardContainer);
+        await this.#tasksModel.init();
+
+        this.#loadingComponent.removeElement();
+        this.#clearBoard();     
         this.#renderBoard();
     }
 
@@ -46,7 +54,9 @@ export default class TasksBoardPresenter {
 
             const taskListElement = taskListComponent.element.querySelector('.task-list');
 
-            const tasksByStatus = this.tasks.filter(task => task.status === status);
+            const tasksByStatus = this.tasks
+                .filter(t => t.status === status)
+                .sort((a, b) => a.order - b.order);
 
             if (tasksByStatus.length === 0) {
                 this.#renderNoTask(taskListElement);
@@ -57,18 +67,21 @@ export default class TasksBoardPresenter {
             }
 
             if (status === Status.BASKET) {
-                const hasTasks = tasksByStatus.length > 0;
-                const clearButtonComponent = new ClearButtonComponent({
+                this.#resetButtonComponent = new ClearButtonComponent({
                     onClick: this.#handleClearBasket.bind(this),
-                    disabled: !hasTasks
+                    disabled: !this.#tasksModel.hasBasketTasks()
                 });
-                render(clearButtonComponent, taskListComponent.element);
+                render(this.#resetButtonComponent, taskListComponent.element);
             }
         });
     }
     
-    #handleTaskDrop(taskId, newStatus, targetIndex) {
-        this.#tasksModel.moveTask(taskId, newStatus, targetIndex);
+    async #handleTaskDrop(taskId, newStatus, targetIndex) {
+        try {
+            await this.#tasksModel.moveTask(taskId, newStatus, targetIndex);
+        } catch (err) {
+            console.error('Ошибка при обновлении статуса задачи:', err);
+        }
     }
 
     #renderNoTask(container) {
@@ -76,27 +89,42 @@ export default class TasksBoardPresenter {
         render(noTaskComponent, container);
     }
 
-    createTask() {
+    async createTask() {
         const taskTitle = document.querySelector('.task-input').value.trim();
         if (!taskTitle) {
             return;
         }
-
-        this.#tasksModel.addTask(taskTitle);
-
-        document.querySelector('.task-input').value = '';
+        try {
+            await this.#tasksModel.addTask(taskTitle);
+            document.querySelector('.task-input').value = '';
+        } catch (err) {
+            console.error('Ошибка при создании задачи:', err);
+        }
     }
 
     get tasks() {
         return this.#tasksModel.tasks;
     }
 
-    #handleModelChange() {
-        this.#clearBoard();
-        this.#renderBoard();
+    #handleModelEvent(event, payload) {
+        switch (event) {
+            case UserAction.ADD_TASK:
+            case UserAction.UPDATE_TASK:
+            case UserAction.DELETE_TASK:
+                this.#clearBoard();
+                this.#renderBoard();
+                if (this.#resetButtonComponent) {
+                    this.#resetButtonComponent.toggleDisabled(!this.#tasksModel.hasBasketTasks());
+                }
+                break;
+        }
     }
 
-    #handleClearBasket() {
-        this.#tasksModel.clearBasket();
+    async #handleClearBasket() {
+        try {
+            await this.#tasksModel.clearBasketTasks();
+        } catch (err) {
+            console.error('Ошибка при очистке корзины:', err);
+        }
     }
 }
